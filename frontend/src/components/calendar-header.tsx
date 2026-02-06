@@ -22,7 +22,7 @@ export function CalendarHeader() {
             got rejected trying to build a calendar for  
           </span>
           <RampLogo width={100} className='mt-2 mb-2'/>
-          <span>so he built <strong> The Ultimate Expense Calendar™ ️ </strong></span>
+          <span>so he built <strong> His Own Expense Calendar️ </strong></span>
         </div>
         <ReceiptHand/>
       </div>
