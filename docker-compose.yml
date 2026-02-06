@@ -1,0 +1,22 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - ramp-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "5002:5000"
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - ramp-network
+
+networks:
+  ramp-network:
+    driver: bridge
