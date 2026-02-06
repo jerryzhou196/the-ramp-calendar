@@ -86,14 +86,18 @@ function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
   return (
     <div
       data-day-cell="1"
+      style={{
+        backgroundColor: isWeekend ? "hsl(0,0%,10%)" : "black",
+        borderLeft: isFirstOfMonth ? "2px solid hsl(0,0%,85%)" : "none",
+      }}
       className={[
-        "relative bg-background dark:!bg-[hsl(0,0%,6%)] p-1 min-w-0 min-h-0 overflow-hidden",
+        "relative p-1 min-w-0 min-h-0 overflow-hidden",
         !isMobile && "aspect-square",
         isWeekend &&
-          'bg-white dark:!bg-[hsl(0,0%,8%)] before:content-[""] before:absolute before:inset-0 before:bg-[rgba(0,0,0,0.02)] dark:before:bg-transparent before:pointer-events-none',
+          "bg-[hsl(0,0%,13%)]",
         isToday && "ring-1 ring-primary",
         isFirstOfMonth &&
-          "border-l-2 border-[hsl(0,0%,85%)] dark:border-[hsl(0,0%,20%)]",
+          "border-l-2 border-[hsl(0,0%,85%)]",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -115,7 +119,6 @@ function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
 
 export function YearCalendar({
   year,
-  alignWeekends = false,
 }: {
   year: number;
   events: AllDayEvent[];
@@ -123,10 +126,6 @@ export function YearCalendar({
 }) {
   const todayKey = formatDateKey(new Date());
   const days = generateYearDays(year);
-  const [cellSizePx, setCellSizePx] = React.useState<{ w: number; h: number }>({
-    w: 0,
-    h: 0,
-  });
 
   // Important for hydration: start with a deterministic server/client match,
   // then compute real columns after mount to avoid style mismatches.
