@@ -1,5 +1,3 @@
-import React from "react";
-
 interface RampLogoProps {
   width?: number;
   height?: number;

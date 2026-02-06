@@ -24,7 +24,7 @@ export type Expense = { amount: number; description: string };
 export type ExpensesMap = Record<string, Expense>;
 
 async function fetchExpenses(): Promise<ExpensesMap> {
-  const response = await fetch("http://127.0.0.1:5000/api/expenses");
+  const response = await fetch("http://127.0.0.1:5002/api/expenses");
   if (!response.ok) {
     throw new Error("Failed to fetch expenses");
   }
@@ -165,7 +165,7 @@ export function YearCalendar({
   const days = generateYearDays(year, expenses);
 
 
-  const [isMobile, setIsMobile] = React.useState<boolean>(false);
+  const [isMobile, ] = React.useState<boolean>(false);
 
   if (isLoading) {
     return (
