@@ -22,13 +22,13 @@ export type AllDayEvent = {
 export type Expense = { amount: number; description: string };
 export type ExpensesMap = Record<string, Expense>;
 
-async function fetchExpenses(): Promise<ExpensesMap> {
-  const response = await fetch("http://127.0.0.1:5002/api/expenses");
-  if (!response.ok) {
-    throw new Error("Failed to fetch expenses");
-  }
-  return response.json();
-}
+// async function fetchExpenses(): Promise<ExpensesMap> {
+//   const response = await fetch("http://127.0.0.1:5002/api/expenses");
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch expenses");
+//   }
+//   return response.json();
+// }
 const EXPENSES: ExpensesMap = {
   "2026-01-05": { amount: 45.99, description: "Lunch" },
   "2026-01-12": { amount: 120.00, description: "Software" },
