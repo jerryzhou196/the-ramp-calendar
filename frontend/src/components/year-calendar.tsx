@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { CalendarHeader } from "./calendar-header";
 
 export type CalendarListItem = {
@@ -30,6 +29,29 @@ async function fetchExpenses(): Promise<ExpensesMap> {
   }
   return response.json();
 }
+const EXPENSES: ExpensesMap = {
+  "2026-01-05": { amount: 45.99, description: "Lunch" },
+  "2026-01-12": { amount: 120.00, description: "Software" },
+  "2026-01-20": { amount: 89.50, description: "Office supplies" },
+  "2026-02-03": { amount: 250.00, description: "Travel" },
+  "2026-02-14": { amount: 65.00, description: "Dinner" },
+  "2026-02-28": { amount: 199.99, description: "Equipment" },
+  "2026-03-10": { amount: 35.00, description: "Books" },
+  "2026-03-22": { amount: 150.00, description: "Conference" },
+  "2026-04-05": { amount: 75.50, description: "Team lunch" },
+  "2026-04-18": { amount: 320.00, description: "Hardware" },
+  "2026-05-01": { amount: 55.00, description: "Subscription" },
+  "2026-05-15": { amount: 180.00, description: "Training" },
+  "2026-06-08": { amount: 95.00, description: "Supplies" },
+  "2026-06-25": { amount: 420.00, description: "Software license" },
+  "2026-07-04": { amount: 85.00, description: "Team event" },
+  "2026-07-20": { amount: 210.00, description: "Travel" },
+  "2026-08-12": { amount: 145.00, description: "Office" },
+  "2026-09-03": { amount: 78.50, description: "Lunch" },
+  "2026-10-15": { amount: 550.00, description: "Equipment" },
+  "2026-11-22": { amount: 125.00, description: "Books" },
+  "2026-12-10": { amount: 300.00, description: "Holiday party" },
+};
 
 export type DayData = {
   key: string;
@@ -156,43 +178,10 @@ export function YearCalendar({
   events: AllDayEvent[];
   alignWeekends?: boolean;
 }) {
-  const { data: expenses = {}, isLoading, error } = useQuery({
-    queryKey: ["expenses"],
-    queryFn: fetchExpenses,
-  });
-
   const todayKey = formatDateKey(new Date());
-  const days = generateYearDays(year, expenses);
-
+  const days = generateYearDays(year, EXPENSES);
 
   const [isMobile, ] = React.useState<boolean>(false);
-
-  if (isLoading) {
-    return (
-      <div>
-        <CalendarHeader />
-        <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-0.3s]" />
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-0.15s]" />
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce" />
-          </div>
-          <span className="text-white text-sm">Loading expenses...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div>
-        <CalendarHeader />
-        <div className="flex items-center justify-center h-64 text-red-500">
-          Error loading expenses: {error.message}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="animate-fade-in">
