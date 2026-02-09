@@ -85,8 +85,8 @@ export function ReceiptHand({ isMobile }: { isMobile: boolean }) {
 
   return (
     <div className="relative flex items-end justify-end w-1/2" style={{
-      transform: isMobile ? ' scale(0.6)' : 'translate(-30%, 50%)',
-      translate: isMobile ? '-90px -20px' : '0px 0px',
+      transform: isMobile ? ' scale(0.40)' : 'translate(-30%, 50%)',
+      translate: isMobile ? '-30px -20px' : '0px 0px',
       transformOrigin: 'bottom right',
     }}>
       {RECEIPTS.map((receipt, i) => {
