@@ -3,7 +3,7 @@ import { RampLogo } from "./ramp-logo";
 import { ExternalLink } from "lucide-react";
 import { ReceiptHand } from "./receipt-hand";
 
-export function CalendarHeader() {
+export function CalendarHeader({ isMobile }: { isMobile: boolean }) {
   return (
     <header>
       <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' />
@@ -24,7 +24,7 @@ export function CalendarHeader() {
           <RampLogo width={100} className='mt-2 mb-2'/>
           <span>so he built <strong> His Own Expense Calendar️ </strong></span>
         </div>
-        <ReceiptHand/>
+        <ReceiptHand isMobile={isMobile} />
       </div>
     </header>
   );

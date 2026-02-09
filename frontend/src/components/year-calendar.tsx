@@ -248,7 +248,7 @@ export function YearCalendar({
 
   return (
     <div className="animate-fade-in">
-      <CalendarHeader />
+      <CalendarHeader isMobile={isMobile} />
       <div
           ref={gridRef}
           className="relative grid bg-border dark:!bg-[hsl(0,0%,12%)] p-px"

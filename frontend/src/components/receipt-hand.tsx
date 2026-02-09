@@ -75,7 +75,7 @@ const CARD_TRANSFORMS = [
   { rotate: 24, x: 120, delay: 0.24 },
 ]
 
-export function ReceiptHand() {
+export function ReceiptHand({ isMobile }: { isMobile: boolean }) {
   const [fanned, setFanned] = useState(false)
 
   useEffect(() => {
@@ -85,7 +85,8 @@ export function ReceiptHand() {
 
   return (
     <div className="relative flex items-end justify-end w-1/2" style={{
-      transform: 'translate(-30%, 50%)',
+      transform: isMobile ? ' scale(0.8)' : 'translate(-30%, 50%)',
+      transformOrigin: 'bottom right',
     }}>
       {RECEIPTS.map((receipt, i) => {
         const t = CARD_TRANSFORMS[i]
