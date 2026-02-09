@@ -14,7 +14,7 @@ interface ReceiptData {
 
 export function ReceiptCard({ data }: { data: ReceiptData }) {
   return (
-    <div className="w-[110px] select-none shadow-lg bg-white">
+    <div className="w-[150px] select-none shadow-lg bg-white">
       {/* Zigzag top edge */}
       <div className="flex h-1.5 w-full overflow-hidden bg-transparent">
         {Array.from({ length: 22 }).map((_, i) => (
