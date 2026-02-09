@@ -90,11 +90,20 @@ const monthShort = [
 
 const dayOfWeekShort = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+interface FontSizes {
+  label: number;
+  dayOfWeek: number;
+  expenseAmount: number;
+  expenseDesc: number;
+  padding: string;
+}
+
 interface DayCellProps {
   day: DayData | null;
   index: number;
   isMobile: boolean;
   todayKey: string;
+  fontSizes: FontSizes;
 }
 
 export function formatDateKey(date: Date): string {
@@ -104,7 +113,7 @@ export function formatDateKey(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
+function DayCell({ day, index, isMobile, todayKey, fontSizes }: DayCellProps) {
   if (day === null) {
     // Empty cell for days before January 1st or after December 31st
     return (
@@ -145,12 +154,21 @@ function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
       title={date.toDateString()}
     >
       {isFirstOfMonth ? (
-        <div className="absolute top-0 left-0 bg-foreground text-background text-[10px] leading-none uppercase tracking-wide px-1.5 py-0.5">
+        <div
+          className="absolute top-0 left-0 bg-foreground text-background leading-none uppercase tracking-wide"
+          style={{ fontSize: `${fontSizes.label}px`, padding: fontSizes.padding }}
+        >
           {monthShort[date.getMonth()]}
         </div>
       ) : (
-        <div className="absolute top-0 left-0 bg-foreground text-background text-[10px] leading-none uppercase tracking-wide px-1.5 py-0.5">
-          <span className="ml-1 text-[8px] uppercase">{dayOfWeekShort[date.getDay()]}</span> {date.getDate()} 
+        <div
+          className="absolute top-0 left-0 bg-foreground text-background leading-none uppercase tracking-wide"
+          style={{ fontSize: `${fontSizes.label}px`, padding: fontSizes.padding }}
+        >
+          <span className="ml-1 uppercase" style={{ fontSize: `${fontSizes.dayOfWeek}px` }}>
+            {dayOfWeekShort[date.getDay()]}
+          </span>{" "}
+          {date.getDate()}
         </div>
       )}
 
@@ -158,10 +176,10 @@ function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
       {expense && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-[11px] font-semibold text-green-400">
+            <div className="font-semibold text-green-400" style={{ fontSize: `${fontSizes.expenseAmount}px` }}>
               ${expense.amount.toFixed(2)}
             </div>
-            <div className="text-[8px] text-muted-foreground truncate max-w-full px-1">
+            <div className="text-muted-foreground truncate max-w-full px-1" style={{ fontSize: `${fontSizes.expenseDesc}px` }}>
               {expense.description}
             </div>
           </div>
@@ -169,6 +187,51 @@ function DayCell({ day, index, isMobile, todayKey }: DayCellProps) {
       )}
     </div>
   );
+}
+
+/** Reference cell width (px) at which base font sizes apply */
+const BASE_CELL_WIDTH = 80;
+const MIN_SCALE = 0.4;
+const MAX_SCALE = 1.6;
+
+function useCellFontSizes(gridRef: React.RefObject<HTMLDivElement | null>) {
+  const [fontSizes, setFontSizes] = React.useState<FontSizes>({
+    label: 10,
+    dayOfWeek: 8,
+    expenseAmount: 11,
+    expenseDesc: 8,
+    padding: "2px 6px",
+  });
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const width = el.getBoundingClientRect().width;
+      const cellWidth = width / 12;
+      const scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, cellWidth / BASE_CELL_WIDTH));
+
+      setFontSizes({
+        label: Math.round(10 * scale),
+        dayOfWeek: Math.round(8 * scale),
+        expenseAmount: Math.round(11 * scale),
+        expenseDesc: Math.round(8 * scale),
+        padding: `${Math.round(2 * scale)}px ${Math.round(6 * scale)}px`,
+      });
+      setIsMobile(width < 640);
+    };
+
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    // Initial measurement
+    update();
+
+    return () => observer.disconnect();
+  }, [gridRef]);
+
+  return { fontSizes, isMobile };
 }
 
 export function YearCalendar({
@@ -180,18 +243,21 @@ export function YearCalendar({
 }) {
   const todayKey = formatDateKey(new Date());
   const days = generateYearDays(year, EXPENSES);
-
-  const [isMobile, ] = React.useState<boolean>(false);
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const { fontSizes, isMobile } = useCellFontSizes(gridRef);
 
   return (
     <div className="animate-fade-in">
       <CalendarHeader />
       <div
-          className="grid bg-border dark:!bg-[hsl(0,0%,12%)] p-px"
+          ref={gridRef}
+          className="relative grid bg-border dark:!bg-[hsl(0,0%,12%)] p-px"
           style={{
             gridTemplateColumns: `repeat(12, 1fr)`,
             gridAutoRows: isMobile ? `12px` : "auto",
             gap: "1px",
+            zIndex: 10,
+            backgroundColor: "black",
           }}
         >
           {days.map((day, index) => (
@@ -201,6 +267,7 @@ export function YearCalendar({
               index={index}
               isMobile={isMobile}
               todayKey={todayKey}
+              fontSizes={fontSizes}
             />
           ))}
       </div>
